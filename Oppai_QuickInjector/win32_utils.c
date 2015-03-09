@@ -54,6 +54,8 @@ int win32_injectdll(uint32_t pid, const char *fullpath) {
 	size_t cbwrite;
 	int res;
 	uint32_t gle;
+	HANDLE remotethread;
+	uint32_t waitevent;
 
 	process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 	if (!process) {
@@ -92,9 +94,24 @@ int win32_injectdll(uint32_t pid, const char *fullpath) {
 		}
 
 		/* call LoadLibraryA with the remotely allocated string in the target process */
-		if (!CreateRemoteThread(process, NULL, 0, pfnLoadLibraryA, premotefullpath, 0, NULL)) {
+		remotethread = CreateRemoteThread(process, NULL, 0, pfnLoadLibraryA, premotefullpath, 0, NULL);
+		if (!remotethread) {
 			gle = GetLastError();
 			res = 0;
+			break;
+		}
+
+		/* wait for the remote thread to terminate */
+		waitevent = WaitForSingleObject(remotethread, 30000);
+		if (waitevent == WAIT_TIMEOUT) {
+			gle = ERROR_TIMEOUT;
+			res = 0;
+			break;
+		}
+		else if (waitevent == WAIT_FAILED) {
+			gle = GetLastError();
+			res = 0;
+			break;
 		}
 	} while (0);
 

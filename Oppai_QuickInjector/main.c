@@ -25,7 +25,7 @@
 #include "win32_utils.h"
 
 #define INJECTOR_INI ".\\Oppai_QuickInjector.ini"
-#define INJECTOR_VERSION "v1.0"
+#define INJECTOR_VERSION "v1.1"
 
 /* 
  * holds the list of DLLs parsed from the injector's config file 
