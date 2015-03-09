@@ -44,12 +44,6 @@ Compiling:
 ==============
 The project should compile out of the box in both Debug and Release mode.
 
-Advanced Users:
-==============
-If for some reason you don't want to use WiFi ADB or you need to change the ip it connects 
-to because you want to use it on a real device, you can change the ConnectCommand parameter 
-in settings.ini
-
 Troubleshooting:
 ==============
 If the injection fails, make sure you are running it as administrator.
